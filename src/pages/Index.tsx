@@ -8,7 +8,6 @@ import SessionsTab from "@/components/tabs/SessionsTab";
 import AIInsightsTab from "@/components/tabs/AIInsightsTab";
 import EnhancedAlert from "@/components/EnhancedAlert";
 import SessionControlFAB from "@/components/SessionControlFAB";
-import ChatNavButton from "@/components/ChatNavButton";
 
 const Index = () => {
   const [activeSession, setActiveSession] = useState(false);
@@ -119,9 +118,6 @@ const Index = () => {
         isActive={activeSession}
         onToggle={() => setActiveSession(!activeSession)}
       />
-
-      {/* Chat Navigation Button */}
-      <ChatNavButton />
     </div>
   );
 };
