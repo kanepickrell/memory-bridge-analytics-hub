@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -168,8 +167,12 @@ const ChatPage = () => {
                 transition={{ duration: 0.4 }}
                 onClick={handleStartSession}
               >
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-green-400 to-green-600 mb-6 flex items-center justify-center shadow-lg">
-                  <span className="text-4xl">🤖</span>
+                <div className="w-32 h-32 rounded-full mb-6 flex items-center justify-center shadow-lg overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/120ba35d-cf73-4d55-a86c-cd2e7b8deca0.png" 
+                    alt="Remi Avatar" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800 mb-4">Meet Remi</h2>
                 <p className="text-lg text-gray-600 text-center mb-6 max-w-md">
@@ -192,7 +195,7 @@ const ChatPage = () => {
                 <div className="flex items-center justify-between p-4 border-b border-green-200 bg-white/50">
                   <div className="flex items-center gap-3">
                     <motion.div
-                      className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center"
+                      className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden"
                       animate={isRecording ? "listening" : "idle"}
                       variants={avatarVariants}
                       transition={{ 
@@ -201,7 +204,11 @@ const ChatPage = () => {
                         ease: "easeInOut" 
                       }}
                     >
-                      <span className="text-xl">🤖</span>
+                      <img 
+                        src="/lovable-uploads/120ba35d-cf73-4d55-a86c-cd2e7b8deca0.png" 
+                        alt="Remi Avatar" 
+                        className="w-full h-full object-cover"
+                      />
                     </motion.div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Remi</h3>
