@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Clock, Heart, MessageCircle, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface SessionReviewProps {
   onStartNewSession: () => void;
@@ -130,21 +129,6 @@ const SessionReview = ({ onStartNewSession, sessionData }: SessionReviewProps) =
             </p>
           </div>
         </div>
-      </motion.div>
-
-      {/* Action Buttons with Modern Styling */}
-      <motion.div
-        className="flex gap-4 w-full max-w-md"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2 }}
-      >
-        <Button
-          onClick={onStartNewSession}
-          className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-full py-3 font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-        >
-          Continue Exploring
-        </Button>
       </motion.div>
 
       {/* Subtle Progress Indicator */}
