@@ -157,9 +157,9 @@ const ChatPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-blue-50 flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-blue-50 flex flex-col relative">
+            {/* Return to Dashboard Button - Fixed position in top left */}
+            <div className="absolute top-6 left-6 z-10">
                 <Button
                     variant="ghost"
                     onClick={() => navigate("/")}
@@ -168,13 +168,14 @@ const ChatPage = () => {
                     <ArrowLeft className="h-4 w-4" />
                     Back to Dashboard
                 </Button>
+            </div>
 
+            {/* Header */}
+            <div className="flex items-center justify-center p-6">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-800">Talk to Remi</h1>
                     <p className="text-sm text-gray-600">Your AI Memory Companion</p>
                 </div>
-
-                <div className="w-24"></div>
             </div>
 
             {/* Main Chat Interface */}
