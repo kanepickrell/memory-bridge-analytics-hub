@@ -1,16 +1,19 @@
-
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Mic, MicOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SessionReview from "@/components/chat/SessionReview";
 
 const ChatPage = () => {
     const navigate = useNavigate();
     const [sessionActive, setSessionActive] = useState(false);
+    const [showReview, setShowReview] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [conversation, setConversation] = useState<Array<{ id: number, text: string, isUser: boolean }>>([]);
+    const [currentMessage, setCurrentMessage] = useState("");
+    const [sessionStartTime, setSessionStartTime] = useState<number>(0);
     const recordStartRef = useRef<number>(0);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -46,6 +49,8 @@ const ChatPage = () => {
 
     const handleStartSession = () => {
         setSessionActive(true);
+        setShowReview(false);
+        setSessionStartTime(Date.now());
         setConversation([{
             id: 1,
             text: "Hi! I'm Remi, your memory companion. I'm here to help you explore and share your memories. What would you like to talk about today?",
@@ -56,7 +61,34 @@ const ChatPage = () => {
     const handleEndSession = () => {
         setSessionActive(false);
         setIsRecording(false);
-        setConversation([]);
+        setCurrentMessage("");
+        
+        // Calculate session data
+        const duration = Math.round((Date.now() - sessionStartTime) / 1000 / 60);
+        
+        // Show review instead of going back to welcome
+        setShowReview(true);
+    };
+
+    const generateSessionData = () => {
+        const duration = Math.round((Date.now() - sessionStartTime) / 1000 / 60);
+        const memoriesShared = Math.max(1, Math.floor(conversation.filter(msg => msg.isUser).length / 2));
+        
+        const themes = [
+            "You explored wonderful childhood memories today",
+            "Family connections were a beautiful theme in our conversation", 
+            "You shared some truly heartwarming stories",
+            "Your memories about special places came alive today"
+        ];
+        
+        const engagementLevels = ["Very Engaged", "Deeply Reflective", "Wonderfully Open"];
+        
+        return {
+            duration: `${duration} minutes`,
+            memoriesShared,
+            engagementLevel: engagementLevels[Math.floor(Math.random() * engagementLevels.length)],
+            keyTheme: themes[Math.floor(Math.random() * themes.length)]
+        };
     };
 
     const startRecording = async () => {
@@ -98,8 +130,7 @@ const ChatPage = () => {
     };
 
     const handleAudioUpload = async (audioBlob: Blob) => {
-        // Simulate processing and response
-        const userMessage = "I recorded something..."; // In real implementation, this would be transcribed
+        const userMessage = "I recorded something...";
 
         setConversation(prev => [...prev, {
             id: prev.length + 1,
@@ -107,7 +138,6 @@ const ChatPage = () => {
             isUser: true
         }]);
 
-        // Simulate Remi's response
         setTimeout(() => {
             const responses = [
                 "That's a wonderful memory! Can you tell me more about how that made you feel?",
@@ -144,7 +174,7 @@ const ChatPage = () => {
                     <p className="text-sm text-gray-600">Your AI Memory Companion</p>
                 </div>
 
-                <div className="w-24"></div> {/* Spacer for centering */}
+                <div className="w-24"></div>
             </div>
 
             {/* Main Chat Interface */}
@@ -156,7 +186,12 @@ const ChatPage = () => {
                     transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
                     <AnimatePresence mode="wait">
-                        {!sessionActive ? (
+                        {showReview ? (
+                            <SessionReview
+                                onStartNewSession={handleStartSession}
+                                sessionData={generateSessionData()}
+                            />
+                        ) : !sessionActive ? (
                             <motion.div
                                 key="welcome"
                                 className="h-full flex flex-col items-center justify-center p-8 cursor-pointer"
@@ -190,7 +225,6 @@ const ChatPage = () => {
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.4 }}
                             >
-                                {/* Chat Header */}
                                 <div className="flex items-center justify-between p-4 border-b border-green-200 bg-white/50">
                                     <div className="flex items-center gap-3">
                                         <motion.div
@@ -237,7 +271,6 @@ const ChatPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Conversation Area */}
                                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                                     {conversation.map((message) => (
                                         <motion.div
@@ -259,7 +292,6 @@ const ChatPage = () => {
                                     ))}
                                 </div>
 
-                                {/* Recording Interface */}
                                 <div className="p-4 bg-white/70 border-t border-green-200">
                                     <div className="flex items-center justify-center">
                                         <motion.button
