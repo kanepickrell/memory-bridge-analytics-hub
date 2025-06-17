@@ -4,9 +4,53 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { MessageSquare, BarChart3, CheckCircle, TrendingDown } from "lucide-react";
+import { MessageSquare, BarChart3, CheckCircle, TrendingDown, Download } from "lucide-react";
+import { generateResearchDataset, exportToJSON, exportToCSV } from "@/utils/dataExporter";
+import { useToast } from "@/hooks/use-toast";
 
-const CognitiveHealthTab = () => {
+interface CognitiveHealthTabProps {
+  data?: any;
+}
+
+const CognitiveHealthTab: React.FC<CognitiveHealthTabProps> = ({ data }) => {
+  const { toast } = useToast();
+  
+  const handleExportJSON = () => {
+    try {
+      const dataset = generateResearchDataset({ cognitiveHealth: data });
+      exportToJSON(dataset, 'cognitive-health-research-data');
+      
+      toast({
+        title: "Export Successful",
+        description: "Research dataset exported as JSON file",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Unable to export research dataset",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleExportCSV = () => {
+    try {
+      const dataset = generateResearchDataset({ cognitiveHealth: data });
+      exportToCSV(dataset, 'cognitive-health-research-data');
+      
+      toast({
+        title: "Export Successful", 
+        description: "Research dataset exported as CSV file",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Unable to export research dataset",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Speech Pattern Analysis - Enhanced */}
@@ -25,14 +69,16 @@ const CognitiveHealthTab = () => {
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">Filler Word Ratio</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-mono">8.1%</span>
+                <span className="text-sm font-mono">
+                  {data?.speechMetrics?.fillerRatio ? (data.speechMetrics.fillerRatio * 100).toFixed(1) : '8.1'}%
+                </span>
                 <Badge variant="secondary" className="bg-green-100 text-green-800">
                   Normal
                 </Badge>
               </div>
             </div>
             <div className="relative">
-              <Progress value={8.1} className="h-3" />
+              <Progress value={data?.speechMetrics?.fillerRatio ? data.speechMetrics.fillerRatio * 100 : 8.1} className="h-3" />
               <div className="absolute top-0 w-0.5 h-3 bg-red-500" style={{ left: '15%' }} />
             </div>
             <p className="text-xs text-green-600 flex items-center gap-1">
@@ -45,14 +91,16 @@ const CognitiveHealthTab = () => {
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">Vocabulary Diversity</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-mono">79.1%</span>
+                <span className="text-sm font-mono">
+                  {data?.speechMetrics?.vocabularyDiversity ? (data.speechMetrics.vocabularyDiversity * 100).toFixed(1) : '79.1'}%
+                </span>
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800">
                   Declining
                 </Badge>
               </div>
             </div>
             <div className="relative">
-              <Progress value={79.1} className="h-3" />
+              <Progress value={data?.speechMetrics?.vocabularyDiversity ? data.speechMetrics.vocabularyDiversity * 100 : 79.1} className="h-3" />
               <div className="absolute top-0 w-0.5 h-3 bg-red-500" style={{ left: '60%' }} />
             </div>
             <p className="text-xs text-amber-600 flex items-center gap-1">
@@ -65,11 +113,13 @@ const CognitiveHealthTab = () => {
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">Response Complexity</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-mono">74.3</span>
+                <span className="text-sm font-mono">
+                  {data?.speechMetrics?.readingEase || '74.3'}
+                </span>
                 <Badge variant="secondary">Stable</Badge>
               </div>
             </div>
-            <Progress value={74.3} className="h-3" />
+            <Progress value={data?.speechMetrics?.readingEase || 74.3} className="h-3" />
             <p className="text-xs text-blue-600">Reading ease score within normal range</p>
           </div>
         </CardContent>
@@ -92,9 +142,25 @@ const CognitiveHealthTab = () => {
             <p className="text-xs text-blue-700 mb-3">
               Data structured for TalkBank research frameworks and longitudinal studies
             </p>
-            <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
-              Export Research Dataset
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                size="sm" 
+                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                onClick={handleExportJSON}
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Export JSON
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="flex-1"
+                onClick={handleExportCSV}
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Export CSV
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2 text-sm">

@@ -3,9 +3,53 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, BarChart3 } from "lucide-react";
+import { Users, BarChart3, Download } from "lucide-react";
+import { generateResearchDataset, exportToJSON, exportToCSV } from "@/utils/dataExporter";
+import { useToast } from "@/hooks/use-toast";
 
-const AIInsightsTab = () => {
+interface AIInsightsTabProps {
+  data?: any;
+}
+
+const AIInsightsTab: React.FC<AIInsightsTabProps> = ({ data }) => {
+  const { toast } = useToast();
+
+  const handleExportJSON = () => {
+    try {
+      const dataset = generateResearchDataset({ aiInsights: data });
+      exportToJSON(dataset, 'ai-insights-research-data');
+      
+      toast({
+        title: "Export Successful",
+        description: "Complete research dataset exported as JSON file",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Unable to export research dataset",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleExportCSV = () => {
+    try {
+      const dataset = generateResearchDataset({ aiInsights: data });
+      exportToCSV(dataset, 'ai-insights-research-data');
+      
+      toast({
+        title: "Export Successful",
+        description: "Complete research dataset exported as CSV file", 
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Unable to export research dataset",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* AI Agent Performance */}
@@ -73,27 +117,51 @@ const AIInsightsTab = () => {
             <p className="text-xs text-blue-700 mb-3">
               Data structured for integration with TalkBank research frameworks
             </p>
-            <Button size="sm" variant="outline" className="w-full">
-              Export Research Dataset
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                size="sm" 
+                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                onClick={handleExportJSON}
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Export JSON
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="flex-1"
+                onClick={handleExportCSV}
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Export CSV
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Conversation turns analyzed</span>
-              <span className="font-medium">1,247</span>
+              <span className="font-medium">
+                {data?.conversationTurns || 1247}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Speech biomarkers extracted</span>
-              <span className="font-medium">156</span>
+              <span className="font-medium">
+                {data?.speechBiomarkersExtracted || 156}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Memory assessments</span>
-              <span className="font-medium">24</span>
+              <span className="font-medium">
+                {data?.memoryAssessmentsCompleted || 24}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Safety interventions logged</span>
-              <span className="font-medium">8</span>
+              <span className="font-medium">
+                {data?.safetyInterventions || 8}
+              </span>
             </div>
           </div>
 
