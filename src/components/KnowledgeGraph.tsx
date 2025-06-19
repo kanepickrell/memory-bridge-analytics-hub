@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -10,6 +11,7 @@ import {
   Controls,
   MiniMap,
   Node,
+  BackgroundVariant,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -241,7 +243,7 @@ const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ data }) => {
           zoomable
           pannable
         />
-        <Background variant="dot" gap={12} size={1} />
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
     </div>
   );
