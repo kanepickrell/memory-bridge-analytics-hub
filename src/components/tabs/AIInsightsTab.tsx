@@ -1,55 +1,15 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, BarChart3, Download } from "lucide-react";
-import { generateResearchDataset, exportToJSON, exportToCSV } from "@/utils/dataExporter";
-import { useToast } from "@/hooks/use-toast";
+import { Users, Network } from "lucide-react";
+import KnowledgeGraph from "@/components/KnowledgeGraph";
 
 interface AIInsightsTabProps {
   data?: any;
 }
 
 const AIInsightsTab: React.FC<AIInsightsTabProps> = ({ data }) => {
-  const { toast } = useToast();
-
-  const handleExportJSON = () => {
-    try {
-      const dataset = generateResearchDataset({ aiInsights: data });
-      exportToJSON(dataset, 'ai-insights-research-data');
-      
-      toast({
-        title: "Export Successful",
-        description: "Complete research dataset exported as JSON file",
-      });
-    } catch (error) {
-      toast({
-        title: "Export Failed",
-        description: "Unable to export research dataset",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleExportCSV = () => {
-    try {
-      const dataset = generateResearchDataset({ aiInsights: data });
-      exportToCSV(dataset, 'ai-insights-research-data');
-      
-      toast({
-        title: "Export Successful",
-        description: "Complete research dataset exported as CSV file", 
-      });
-    } catch (error) {
-      toast({
-        title: "Export Failed",
-        description: "Unable to export research dataset",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* AI Agent Performance */}
@@ -100,75 +60,36 @@ const AIInsightsTab: React.FC<AIInsightsTabProps> = ({ data }) => {
         </CardContent>
       </Card>
 
-      {/* Research Data Export */}
+      {/* Knowledge Graph Visualization */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            Research Data Generation
+            <Network className="h-5 w-5" />
+            Memory Relationship Map
           </CardTitle>
           <CardDescription>
-            Academic-quality longitudinal conversation analysis
+            Interactive knowledge graph of conversation entities and relationships
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-900 mb-2">DementiaBank Compatible</h4>
-            <p className="text-xs text-blue-700 mb-3">
-              Data structured for integration with TalkBank research frameworks
+          <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <h4 className="text-sm font-medium text-purple-900 mb-2">LightRAG Visualization</h4>
+            <p className="text-xs text-purple-700 mb-3">
+              Real-time entity extraction and relationship mapping from conversations
             </p>
-            <div className="flex gap-2">
-              <Button 
-                size="sm" 
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
-                onClick={handleExportJSON}
-              >
-                <Download className="h-4 w-4 mr-1" />
-                Export JSON
-              </Button>
-              <Button 
-                size="sm" 
-                variant="outline"
-                className="flex-1"
-                onClick={handleExportCSV}
-              >
-                <Download className="h-4 w-4 mr-1" />
-                Export CSV
-              </Button>
+            <div className="flex justify-between text-xs text-purple-600 mb-2">
+              <span>Entities: {data?.entities || 15}</span>
+              <span>Relationships: {data?.relationships || 15}</span>
+              <span>Sessions: {data?.sessions || 1}</span>
             </div>
           </div>
 
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>Conversation turns analyzed</span>
-              <span className="font-medium">
-                {data?.conversationTurns || 1247}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Speech biomarkers extracted</span>
-              <span className="font-medium">
-                {data?.speechBiomarkersExtracted || 156}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Memory assessments</span>
-              <span className="font-medium">
-                {data?.memoryAssessmentsCompleted || 24}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Safety interventions logged</span>
-              <span className="font-medium">
-                {data?.safetyInterventions || 8}
-              </span>
-            </div>
-          </div>
+          <KnowledgeGraph data={data} />
 
           <div className="pt-3 border-t">
             <p className="text-xs text-muted-foreground">
-              Real-time cognitive assessment during natural conversation - 
-              the first system of its kind generating research-quality therapeutic data.
+              Drag nodes to explore relationships. The graph updates in real-time as new 
+              memories and connections are discovered during conversations.
             </p>
           </div>
         </CardContent>
