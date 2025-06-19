@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -242,7 +241,7 @@ const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ data }) => {
           zoomable
           pannable
         />
-        <Background variant="dots" gap={12} size={1} />
+        <Background variant="dot" gap={12} size={1} />
       </ReactFlow>
     </div>
   );
